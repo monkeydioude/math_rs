@@ -8,6 +8,10 @@ edition = "2018"
 
 [dependencies]
 
+[dependencies.sdl2]
+version = "0.34"
+features = ["bundled", "static-link"]
+
 [[bin]]
 name = "math_rs"
 path = "src/main.rs"
