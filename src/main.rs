@@ -1,4 +1,5 @@
 mod vector2d;
+pub mod shape;
 pub mod screen;
 pub mod node;
 
@@ -43,8 +44,8 @@ fn main() {
     let screen = Screen::new(800, 600, "pouet, pouet");
     let mut canvas = screen.canvas;
     let mut event_pump = screen.sdl_context.event_pump().unwrap();
-    let mut i = 0;
-    let mut nodes : [dyn Node] = [CanvasColor{i: 0}];
+    let mut nodes: Vec<Box<dyn Node>> = Vec::new();
+    nodes.push(Box::new(CanvasColor{i: 0}));
 
     'running: loop {
         for event in event_pump.poll_iter() {
@@ -56,7 +57,18 @@ fn main() {
                 _ => {}
             }
         }
-        // The rest of the game loop goes here...
+
+        let mut to_rm: Vec<usize> = Vec::new();
+        for (it, node) in nodes.iter_mut().enumerate() {
+            let res = node.update(0.0);
+            if res == Ok(false) {
+                to_rm.push(it);
+            }
+        }
+
+        for e in to_rm.iter() {
+            nodes.remove(*e);
+        }
 
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
