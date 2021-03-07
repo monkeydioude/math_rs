@@ -58,18 +58,15 @@ fn main() {
             }
         }
 
-        let mut to_rm: Vec<usize> = Vec::new();
-        for (it, node) in nodes.iter_mut().enumerate() {
-            let res = node.update(0.0);
-            if res == Ok(false) {
-                to_rm.push(it);
+        let mut j = 0;
+        for _ in  0..nodes.len() {
+            let res = nodes[j].update(0.0);
+            if res == false {
+                nodes.remove(j);
+                j -= 1;
             }
+            j += 1;
         }
-
-        for e in to_rm.iter() {
-            nodes.remove(*e);
-        }
-
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
     }
